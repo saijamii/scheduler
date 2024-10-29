@@ -15,11 +15,11 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={inter.className}>
           <Header />
-          <main className="min-h-screen bg-gradient-to-b from-purple-100 to white">
+          <main className="min-h-screen bg-gradient-to-b from-blue-100 to white">
             {children}
           </main>
           {/* Footer  */}
-          <footer className="bg-purple-300 py-12">
+          <footer className="bg-blue-300 py-12">
             <div className="container mx-auto px-4 text-center">
               Made with 🖤 by Sai Jami
             </div>
