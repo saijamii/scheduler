@@ -66,3 +66,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .gradient-title {
+    @apply font-extrabold bg-gradient-to-br from-purple-600 to-purple-50 bg-clip-text  
+    tracking-tighter text-transparent pb-4 pr-2;
+  }
+}
