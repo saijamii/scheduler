@@ -114,7 +114,7 @@ export default function Home() {
           How It Works
         </h2>
       </div>
-      <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         {howItWorks.map((step, index) => (
           <div key={index} className="text-center">
             <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
@@ -126,6 +126,20 @@ export default function Home() {
             <p className="text-gray-600">{step.description}</p>
           </div>
         ))}
+      </div>
+      <div className="bg-blue-600 text-white rounded-lg p-8 text-center">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Simplify Your Scheduling?
+        </h2>
+        <p className="text-xl mb-6">
+          Join thousands of professionals who trust Schedulrr for efficient time
+          management.
+        </p>
+        <Link href={"/dashboard"}>
+          <Button size="lg" variant="secondary" className="text-blue-600">
+            Start For Free <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </Link>
       </div>
     </main>
   );
