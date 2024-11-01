@@ -16,7 +16,6 @@ const navItems = [
 const AppLayout = ({ children }) => {
   const { isLoaded, isSignedIn, user } = useUser();
   const pathName = usePathname();
-  console.log({ isLoaded, isSignedIn, user });
   return (
     <>
       {!isLoaded && <BarLoader width={"100%"} color="#36d7b7" />}
