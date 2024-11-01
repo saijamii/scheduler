@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           {/* Footer  */}
-          <footer className="bg-blue-100  md:py-5 sm:hidden">
+          <footer className="bg-blue-100 md:py-5 hidden md:block">
             <div className="container mx-auto px-4 text-center text-gray-600">
               Made with 🖤 by Sai Jami
             </div>
