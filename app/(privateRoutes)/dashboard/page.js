@@ -7,10 +7,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usernameSchema } from "@/app/lib/validators";
 import { useEffect } from "react";
+import { updateUsername } from "@/actions/users";
+import { BarLoader } from "react-spinners";
+import useFetch from "@/hooks/useFetch";
 
 const Dashboard = () => {
   const { isLoaded, user } = useUser();
-  console.log(user, "user");
 
   const {
     register,
@@ -23,9 +25,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     setValue("username", user?.username);
-  }, [isLoaded]);
+  }, [isLoaded, setValue, user?.username]);
 
-  const onSubmit = async (data) => {};
+  const { loading, error, fn: fnUpdateUserName } = useFetch(updateUsername);
+  const onSubmit = async (values) => {
+    fnUpdateUserName(values.username);
+  };
   return (
     <div className="space-y-8">
       <Card>
@@ -46,7 +51,13 @@ const Dashboard = () => {
                   {errors.username.message}
                 </p>
               )}
+              {error && (
+                <p className="text-red-500 text-sm mt-1">{error.message}</p>
+              )}
             </div>
+            {loading && (
+              <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
+            )}
             <Button>Update Username</Button>
           </form>
         </CardContent>
