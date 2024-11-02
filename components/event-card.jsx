@@ -11,6 +11,8 @@ import {
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import useFetch from "@/hooks/useFetch";
+import { deleteEvent } from "@/actions/events";
 
 const EventCard = ({ event, username, isPublic = false }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -29,7 +31,16 @@ const EventCard = ({ event, username, isPublic = false }) => {
       console.error(error);
     }
   };
-  
+
+  const { loading, fn: fndeleteEvent } = useFetch(deleteEvent);
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this event")) {
+      await fndeleteEvent(event.id);
+      router.refresh();
+    }
+  };
+
   return (
     <Card className="flex flex-col justify-between cursor-pointer">
       <CardHeader>
@@ -59,9 +70,13 @@ const EventCard = ({ event, username, isPublic = false }) => {
             <Link className="mr-2 h-4 w-4" />
             {isCopied ? "Copied!" : "Copy Link"}
           </Button>
-          <Button variant="destructive">
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={loading}
+          >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete
+            {loading ? "Deleting" : "Delete"}
           </Button>
         </CardFooter>
       )}
