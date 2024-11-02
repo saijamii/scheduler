@@ -11,6 +11,7 @@ import {
   DrawerTitle,
 } from "./ui/drawer";
 import { useSearchParams, useRouter } from "next/navigation";
+import EventForm from "./event-form";
 
 export default function CreateEventDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,11 @@ export default function CreateEventDrawer() {
         <DrawerHeader>
           <DrawerTitle>Create New Event</DrawerTitle>
         </DrawerHeader>
+        <EventForm
+          onSubmitForm={() => {
+            handleClose();
+          }}
+        />
         <DrawerFooter className="px-6">
           <DrawerClose asChild>
             <Button variant="outline" onClick={handleClose}>
