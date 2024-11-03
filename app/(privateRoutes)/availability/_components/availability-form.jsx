@@ -14,9 +14,10 @@ import { Controller, useForm } from "react-hook-form";
 import { timeSlots } from "../data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useFetch from "@/hooks/useFetch";
+import { updateAvailability } from "@/actions/availability";
 
 const AvailabilityForm = ({ intialData }) => {
-  console.log(intialData);
   const {
     register,
     handleSubmit,
@@ -28,8 +29,18 @@ const AvailabilityForm = ({ intialData }) => {
     resolver: zodResolver(availabilitySchema),
     defaultValues: { ...intialData },
   });
+
+  const {
+    loading,
+    error,
+    fn: fnUpdateAvailability,
+  } = useFetch(updateAvailability);
+
+  const onSubmit = async (data) => {
+    await fnUpdateAvailability(data);
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {[
         "monday",
         "tuesday",
@@ -140,8 +151,11 @@ const AvailabilityForm = ({ intialData }) => {
           </span>
         )}
       </div>
-      <Button type="submit" className="mt-5">
-        Update Avaliabilty
+      {error && (
+                <p className="text-red-500 text-sm mt-1">{error.message}</p>
+              )}
+      <Button type="submit" className="mt-5" disabled={loading}>
+        {loading ? "Updating..." : "Update Avaliabilty"}
       </Button>
     </form>
   );
