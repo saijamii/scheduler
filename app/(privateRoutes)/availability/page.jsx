@@ -7,7 +7,7 @@ const AvailabiltyPage = async () => {
 
   return (
     <div>
-      <AvailabilityForm intialData={availability || defaultAvailability} />
+      <AvailabilityForm initialData={availability || defaultAvailability} />
     </div>
   );
 };

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/useFetch";
 import { updateAvailability } from "@/actions/availability";
 
-const AvailabilityForm = ({ intialData }) => {
+const AvailabilityForm = ({ initialData }) => {
   const {
     register,
     handleSubmit,
@@ -27,7 +27,7 @@ const AvailabilityForm = ({ intialData }) => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(availabilitySchema),
-    defaultValues: { ...intialData },
+    defaultValues: { ...initialData },
   });
 
   const {
