@@ -2,7 +2,14 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { addMinutes, format, isBefore, parseISO } from "date-fns";
+import {
+  startOfDay,
+  addDays,
+  format,
+  parseISO,
+  isBefore,
+  addMinutes,
+} from "date-fns";
 
 export async function getUserAvailability() {
   const { userId } = await auth();
@@ -19,12 +26,12 @@ export async function getUserAvailability() {
     },
   });
 
-  if (!user || !user.availability) {
+  if (!user || !user.availabilty) {
     return null;
   }
 
   const availabilityData = {
-    timeGap: user.availability.timeGap,
+    timeGap: user.availabilty.timeGap,
   };
 
   [
@@ -36,7 +43,7 @@ export async function getUserAvailability() {
     "saturday",
     "sunday",
   ].forEach((day) => {
-    const dayAvaliability = user.availability.days.find(
+    const dayAvaliability = user.availabilty.days.find(
       (d) => d.day === day.toUpperCase()
     );
 
@@ -87,9 +94,9 @@ export async function updateAvailability(data) {
     }
   );
 
-  if (user.availability) {
+  if (user.availabilty) {
     await db.availability.update({
-      where: { id: user.availability.id },
+      where: { id: user.availabilty.id },
       data: {
         timeGap: data.timeGap,
         days: {
@@ -121,8 +128,8 @@ export async function getEventAvailability(eventId) {
     include: {
       user: {
         include: {
-          availablity: {
-            // availablity of that user
+          availabilty: {
+            // availabilty of that user
             select: {
               days: true,
               timeGap: true,
@@ -141,7 +148,7 @@ export async function getEventAvailability(eventId) {
   });
 
   // No Event or No user Avaliablity
-  if (!event || !event.user.availablity) {
+  if (!event || !event.user.availabilty) {
     return [];
   }
 
@@ -151,9 +158,9 @@ export async function getEventAvailability(eventId) {
 
   const availableDates = [];
 
-  for (let date = startDate; date <= endDate; date = addDays(startDate, 1)) {
-    const dayOfWeek = format(date, "").toUpperCase(); // converts into Day (MONDAY)
-    const dayAvaliable = availabilty.days.find((d) => d.day === dayOfWeek);
+  for (let date = startDate; date <= endDate; date = addDays(date, 1)) {
+    const dayOfWeek = format(date, "EEEE").toUpperCase(); // converts into Day (MONDAY)
+    const dayAvaliable = availabilty?.days?.find((d) => d.day === dayOfWeek);
 
     if (dayAvaliable) {
       const dateStr = format(date, "yyyy-MM-dd");
@@ -165,12 +172,12 @@ export async function getEventAvailability(eventId) {
         dateStr,
         availabilty.timeGap
       );
-    }
 
-    availableDates.push({
-      date: dateStr,
-      slots,
-    });
+      availableDates.push({
+        date: dateStr,
+        slots,
+      });
+    }
   }
 
   return availableDates;
@@ -193,6 +200,7 @@ function generateAvailableTimeSlots(
     `${dateStr}T${endTime.toISOString().slice(11, 16)}`
   );
 
+  // If the date is today, start from the next available slot after the current time
   const now = new Date();
 
   if (format(now, "yyyy-MM-dd") === dateStr) {
