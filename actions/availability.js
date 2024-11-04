@@ -12,7 +12,7 @@ export async function getUserAvailability() {
   const user = await db.user.findUnique({
     where: { clerkUserId: userId },
     include: {
-        availabilty: {
+      availabilty: {
         include: { days: true },
       },
     },
@@ -175,7 +175,13 @@ export async function getEventAvailability(eventId) {
   return availableDates;
 }
 
-
-function generateAvailableTimeSlots () {
-  
+function generateAvailableTimeSlots(
+  startTime,
+  endTime,
+  duration,
+  bookings,
+  dateStr,
+  timeGap = 0
+) {
+  const slots = [];
 }
