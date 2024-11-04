@@ -2,6 +2,7 @@
 import { eventSchema } from "@/app/lib/validators";
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { addDays, format, startOfDay } from "date-fns";
 
 export async function createEvent(data) {
   const { userId } = await auth();
@@ -144,6 +145,37 @@ export async function getEventAvailability(eventId) {
   }
 
   const { availabilty, bookings } = event.user; // User With respect to the Event
+  const startDate = startOfDay(new Date()); // Return the start of a day for the given date 12AM
+  const endDate = addDays(startDate, 30); // Adds 30 days
 
+  const availableDates = [];
+
+  for (let date = startDate; date <= endDate; date = addDays(startDate, 1)) {
+    const dayOfWeek = format(date, "").toUpperCase(); // converts into Day (MONDAY)
+    const dayAvaliable = availabilty.days.find((d) => d.day === dayOfWeek);
+
+    if (dayAvaliable) {
+      const dateStr = format(date, "yyyy-MM-dd");
+      const slots = generateAvailableTimeSlots(
+        dayAvaliable.startTime,
+        dayAvaliable.endTime,
+        event.duration,
+        bookings,
+        dateStr,
+        availabilty.timeGap
+      );
+    }
+
+    availableDates.push({
+      date: dateStr,
+      slots,
+    });
+  }
+
+  return availableDates;
+}
+
+
+function generateAvailableTimeSlots () {
   
 }
