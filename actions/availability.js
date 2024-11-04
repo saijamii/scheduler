@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { addMinutes, format, isBefore, parseISO } from "date-fns";
 
 export async function getUserAvailability() {
   const { userId } = await auth();
@@ -184,4 +185,40 @@ function generateAvailableTimeSlots(
   timeGap = 0
 ) {
   const slots = [];
+
+  let currentTime = parseISO(
+    `${dateStr}T${startTime.toISOString().slice(11, 16)}`
+  );
+  const slotEndTime = parseISO(
+    `${dateStr}T${endTime.toISOString().slice(11, 16)}`
+  );
+
+  const now = new Date();
+
+  if (format(now, "yyyy-MM-dd") === dateStr) {
+    // if today === dateString
+
+    currentTime = isBefore(currentTime, now) // Is CurrentTime before Now
+      ? addMinutes(now, timeGap) // Add the time Gap
+      : currentTime;
+  }
+
+  while (currentTime < slotEndTime) {
+    const meetingEndTime = new Date(currentTime.getTime() + duration * 60000);
+
+    const isSlotAvailable = bookings.every(({ startTime, endTime }) => {
+      // Check if there's no overlap with existing bookings
+      const noOverlap = meetingEndTime <= startTime || currentTime >= endTime;
+      return noOverlap;
+    });
+
+    if (isSlotAvailable) {
+      slots.push(format(currentTime, "HH:mm"));
+    }
+
+    // Move to the next time slot (if you need to, otherwise break)
+    currentTime = meetingEndTime;
+  }
+
+  return slots;
 }
