@@ -28,9 +28,9 @@ const BookingForm = ({ userAvailability, event }) => {
     resolver: zodResolver(bookingSchema),
   });
   return (
-    <div>
-      <div>
-        <div>
+    <div className="flex flex-col gap-8 p-10 border bg-white">
+      <div className="md:h-96 flex flex-col md:flex-row gap-5 ">
+        <div className="w-full">
           <DayPicker
             mode="single"
             selected={selectedDate}
@@ -50,19 +50,23 @@ const BookingForm = ({ userAvailability, event }) => {
             }}
           />
         </div>
-        <div>
+        <div className="h-full w-full md:overflow-scroll no-scrollbar">
           {selectedDate && (
-            <div>
-              <h3>Avaliable Time Slots</h3>
-              {timeSlots.map((slot) => (
-                <Button
-                  key={slot}
-                  variant={selectedTime === slot ? "default" : "outline"}
-                  onClick={() => setSelectedTime(slot)}
-                >
-                  {slot}
-                </Button>
-              ))}
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">
+                Available Time Slots
+              </h3>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                {timeSlots.map((slot) => (
+                  <Button
+                    key={slot}
+                    variant={selectedTime === slot ? "default" : "outline"}
+                    onClick={() => setSelectedTime(slot)}
+                  >
+                    {slot}
+                  </Button>
+                ))}
+              </div>
             </div>
           )}
         </div>
