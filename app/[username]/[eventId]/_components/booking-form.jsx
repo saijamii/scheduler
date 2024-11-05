@@ -50,25 +50,25 @@ const BookingForm = ({ userAvailability, event }) => {
             }}
           />
         </div>
-        <div className="h-full w-full md:overflow-scroll no-scrollbar">
-          {selectedDate && (
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">
-                Available Time Slots
-              </h3>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-                {timeSlots.map((slot) => (
-                  <Button
-                    key={slot}
-                    variant={selectedTime === slot ? "default" : "outline"}
-                    onClick={() => setSelectedTime(slot)}
-                  >
-                    {slot}
-                  </Button>
-                ))}
+        <div className="h-full w-full md">
+          <h3 className="text-lg font-semibold mb-2">Available Time Slots</h3>
+          <div className="h-full w-full md:overflow-scroll no-scrollbar">
+            {selectedDate && (
+              <div className="mb-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                  {timeSlots.map((slot) => (
+                    <Button
+                      key={slot}
+                      variant={selectedTime === slot ? "default" : "outline"}
+                      onClick={() => setSelectedTime(slot)}
+                    >
+                      {slot}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
       <div></div>
