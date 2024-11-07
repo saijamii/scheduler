@@ -1,9 +1,11 @@
+"use server";
 import { db } from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 import { google } from "googleapis";
 
 export async function createBooking(bookingData) {
   try {
+    // Fetch the event and its creator
     const event = await db.event.findUnique({
       where: { id: bookingData.eventId },
       include: { user: true },
@@ -15,12 +17,12 @@ export async function createBooking(bookingData) {
 
     // Google Calender
     // Take token from clerk
-    const { data } = await clerkClient.users.getUserOauthAccessToken(
-      event.user.clerkUserId,
-      "oauth_google"
-    );
-
-    const token = data[0]?.token;
+    const userId = event.user.clerkUserId;
+    const provider = "oauth_google";
+    const response = await (
+      await clerkClient()
+    ).users.getUserOauthAccessToken(userId, provider);
+    const token = response.data[0]?.token;
 
     if (!token) {
       throw new Error("Event creator has not connected Google Calendar");

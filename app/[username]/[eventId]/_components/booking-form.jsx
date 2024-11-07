@@ -10,11 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/useFetch";
+import { createBooking } from "@/actions/booking";
 
 const BookingForm = ({ userAvailability, event }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const { loading, data, fn: fnCreateBooking } = useFetch();
+  const { loading, data, fn: fnCreateBooking } = useFetch(createBooking);
 
   const {
     register,
@@ -67,6 +68,27 @@ const BookingForm = ({ userAvailability, event }) => {
         (day) => day.date === format(selectedDate, "yyyy-MM-dd")
       )?.slots || []
     : [];
+
+  if (data) {
+    return (
+      <div className="text-center p-10 border bg-white">
+        <h2 className="text-2xl font-bold mb-4">Booking successful!</h2>
+        {data.meetLink && (
+          <p>
+            Join the meeting:{" "}
+            <a
+              href={data.meetLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {data.meetLink}
+            </a>
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 p-10 border bg-white">
