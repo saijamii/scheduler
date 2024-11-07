@@ -16,13 +16,6 @@ const BookingForm = ({ userAvailability, event }) => {
   const [selectedTime, setSelectedTime] = useState(null);
   const { loading, data, fn: fnCreateBooking } = useFetch();
 
-  const availableDays = userAvailability.map((day) => new Date(day.date));
-  const timeSlots = selectedDate
-    ? userAvailability.find(
-        (day) => day.date === format(selectedDate, "yyyy-MM-dd")
-      )?.slots || []
-    : [];
-
   const {
     register,
     handleSubmit,
@@ -45,8 +38,36 @@ const BookingForm = ({ userAvailability, event }) => {
   }, [selectedTime, setValue]);
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
+    console.log("Form Data", data);
+    if (!selectedDate || !selectedTime) {
+      console.error("Date or time not selected");
+      return;
+    }
+
+    const startTime = new Date(
+      `${format(selectedDate, "yyyy-MM-dd")}T${selectedTime}`
+    );
+    const endTime = new Date(startTime.getTime() + event.duration * 60000);
+
+    const bookingData = {
+      eventId: event.id,
+      name: data.name,
+      email: data.email,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      additionalInfo: data.additionalInfo,
+    };
+
+    await fnCreateBooking(bookingData);
   };
+
+  const availableDays = userAvailability.map((day) => new Date(day.date));
+  const timeSlots = selectedDate
+    ? userAvailability.find(
+        (day) => day.date === format(selectedDate, "yyyy-MM-dd")
+      )?.slots || []
+    : [];
+
   return (
     <div className="flex flex-col gap-8 p-10 border bg-white">
       <div className="md:h-96 flex flex-col md:flex-row gap-5 ">
