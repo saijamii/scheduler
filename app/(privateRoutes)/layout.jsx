@@ -14,7 +14,7 @@ const navItems = [
 ];
 
 const AppLayout = ({ children }) => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded } = useUser();
   const pathName = usePathname();
   return (
     <>
