@@ -43,7 +43,26 @@ export async function createBooking(bookingData) {
         description: bookingData.additionalInfo,
         start: { dateTime: bookingData.startTime },
         end: { dateTime: bookingData.endTime },
-        attendees: [{ email: bookingData.email }, { email: event.user.email }],
+        creator: {
+          id: bookingData.eventId,
+          email: bookingData.email,
+          displayName: bookingData.name,
+          self: true,
+          sendNotifications: true,
+        },
+        organizer: {
+          id: event.user.id,
+          email: event.user.email,
+          displayName: event.user.name,
+          sendNotifications: true,
+        },
+        attendees: [
+          {
+            id: bookingData.eventId,
+            email: bookingData.email,
+          },
+          { id: event.user.id, email: event.user.email },
+        ],
         conferenceData: {
           createRequest: { requestId: `${event.id}-${Date.now()}` },
         },
