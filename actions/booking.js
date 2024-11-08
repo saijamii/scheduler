@@ -38,6 +38,8 @@ export async function createBooking(bookingData) {
     const meetResponse = await calendar.events.insert({
       calendarId: "primary",
       conferenceDataVersion: 1,
+      sendNotifications: true,
+      sendUpdates: "all",
       requestBody: {
         summary: `${bookingData.name} - ${event.title}`,
         description: bookingData.additionalInfo,
@@ -63,6 +65,15 @@ export async function createBooking(bookingData) {
           },
           { id: event.user.id, email: event.user.email },
         ],
+        reminders: {
+          useDefault: true,
+          overrides: [
+            {
+              method: "popup",
+              minutes: 30,
+            },
+          ],
+        },
         conferenceData: {
           createRequest: { requestId: `${event.id}-${Date.now()}` },
         },
