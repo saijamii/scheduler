@@ -11,9 +11,14 @@ import { updateUsername } from "@/actions/users";
 import { BarLoader } from "react-spinners";
 import useFetch from "@/hooks/useFetch";
 import { getLatestUpdates } from "@/actions/dashboard";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const { isLoaded, user } = useUser();
+  const router = useRouter();
+  const currentOrigin =
+    typeof window !== "undefined" ? window.location.origin : "";
 
   const {
     register,
@@ -38,7 +43,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => await fnUpdates())();
-  }, [fnUpdates]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (values) => {
     fnUpdateUserName(values.username);
@@ -81,7 +87,7 @@ const Dashboard = () => {
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <div className="flex items-center gap-2">
-                <span>{window.location.origin}</span>
+                <span>{currentOrigin}</span>
                 <Input {...register("username")} placeholder="username" />
               </div>
               {errors.username && (
