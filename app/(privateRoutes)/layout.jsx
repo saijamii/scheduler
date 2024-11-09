@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { useUser } from "@clerk/nextjs";
 import { BarLoader } from "react-spinners";
 import { BarChart, Calendar, Clock, Users } from "lucide-react";
@@ -48,7 +48,7 @@ const AppLayout = ({ children }) => {
                 "Dashboard"}
             </h2>
           </header>
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </main>
         <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md">
           <ul className="flex justify-around">
