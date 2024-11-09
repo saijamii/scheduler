@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { updateUsername } from "@/actions/users";
 import { BarLoader } from "react-spinners";
 import useFetch from "@/hooks/useFetch";
+import { getLatestUpdates } from "@/actions/dashboard";
 
 const Dashboard = () => {
   const { isLoaded, user } = useUser();
@@ -28,14 +29,51 @@ const Dashboard = () => {
   }, [isLoaded, setValue, user?.username]);
 
   const { loading, error, fn: fnUpdateUserName } = useFetch(updateUsername);
+
+  const {
+    loading: loadingUpdates,
+    data: upcomingMeetings,
+    fn: fnUpdates,
+  } = useFetch(getLatestUpdates);
+
+  useEffect(() => {
+    (async () => await fnUpdates())();
+  }, []);
+
   const onSubmit = async (values) => {
     fnUpdateUserName(values.username);
   };
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader>Welcome, {user?.firstName}</CardHeader>
-        {/* Latest Updates */}
+        <CardContent>
+          {!loadingUpdates ? (
+            <div className="space-y-6 font-light">
+              <div>
+                {upcomingMeetings && upcomingMeetings?.length > 0 ? (
+                  <ul className="list-disc pl-5">
+                    {upcomingMeetings?.map((meeting) => (
+                      <li key={meeting.id}>
+                        {meeting.event.title} on{" "}
+                        {format(
+                          new Date(meeting.startTime),
+                          "MMM d, yyyy h:mm a"
+                        )}{" "}
+                        with {meeting.name}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No upcoming meetings</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <p>Loading updates...</p>
+          )}
+        </CardContent>
       </Card>
       <Card>
         <CardHeader>Your Unique Link</CardHeader>
