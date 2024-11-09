@@ -65,15 +65,15 @@ export async function createBooking(bookingData) {
           },
           { id: event.user.id, email: event.user.email },
         ],
-        reminders: {
-          useDefault: true,
-          overrides: [
-            {
-              method: "popup",
-              minutes: 30,
-            },
-          ],
-        },
+        // reminders: {
+        //   useDefault: true,
+        //   overrides: [
+        //     {
+        //       method: "popup",
+        //       minutes: 30,
+        //     },
+        //   ],
+        // },
         conferenceData: {
           createRequest: { requestId: `${event.id}-${Date.now()}` },
         },
