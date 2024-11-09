@@ -27,7 +27,9 @@ export default function RootLayout({ children }) {
               Made with 🖤 by Sai Jami
             </div>
           </footer>
+          <Suspense fallback={<>Loading...</>}>
           <CreateEventDrawer />
+          </Suspense>
         </body>
       </html>
     </ClerkProvider>

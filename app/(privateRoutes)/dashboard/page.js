@@ -38,7 +38,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => await fnUpdates())();
-  }, []);
+  }, [fnUpdates]);
 
   const onSubmit = async (values) => {
     fnUpdateUserName(values.username);
