@@ -97,3 +97,18 @@ export async function createBooking(bookingData) {
     return { success: false, error: error.message };
   }
 }
+
+export async function getBookingDetails(bookingId) {
+  try {
+    const booking = await db.booking.findUnique({
+      where: { id: bookingId },
+      include: { user: true, event: true },
+    });
+
+    if (!booking) {
+      throw new Error("booking not found");
+    }
+
+    return booking
+  } catch (error) {}
+}
