@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
 export default async function ReSchedulePage({ params }) {
   console.log(params?.bookingId, "params?.bookingId");
   const booking = await getBookingDetails(params?.bookingId);
-  const userAvailability = await getEventAvailability(booking?.event?.id);
+  const userAvailability = await getEventAvailability(booking?.eventId);
 
   console.log(booking, "booking");
   if (!booking) {
@@ -27,9 +27,13 @@ export default async function ReSchedulePage({ params }) {
 
   return (
     <div className="flex flex-col justify-center lg:flex-row px-4 py-8">
-      <EventDetails event={booking} />
+      <EventDetails event={booking} reschedule />
       <Suspense fallback={<div>Loading booking form</div>}>
-        <BookingForm event={booking} userAvailability={userAvailability} />
+        <BookingForm
+          reschedule
+          event={booking}
+          userAvailability={userAvailability}
+        />
       </Suspense>
     </div>
   );

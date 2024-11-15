@@ -109,6 +109,10 @@ export async function getBookingDetails(bookingId) {
       throw new Error("booking not found");
     }
 
-    return booking
-  } catch (error) {}
+    const { event, ...restBooking } = booking;
+    return { ...restBooking, ...event };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching booking details");
+  }
 }

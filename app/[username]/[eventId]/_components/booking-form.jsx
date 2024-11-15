@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/useFetch";
 import { createBooking } from "@/actions/booking";
 
-const BookingForm = ({ userAvailability, event }) => {
+const BookingForm = ({ userAvailability, event , reschedule}) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const { loading, data, fn: fnCreateBooking } = useFetch(createBooking);
