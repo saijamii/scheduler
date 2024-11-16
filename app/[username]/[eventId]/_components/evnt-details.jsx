@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { format, formatDate } from "date-fns";
 import { Calendar, Clock } from "lucide-react";
 
 const EventDetails = ({ event, reschedule }) => {
@@ -29,9 +30,28 @@ const EventDetails = ({ event, reschedule }) => {
       </div>
       <div className="flex items-center mb-4">
         <Calendar className="mr-2" />
-        <span>Google Meet</span>
+        <span>
+          {reschedule ? (
+            <span>
+              {format(event.startTime, "HH:mma - ") +
+                format(event.endTime, "HH:mma")}
+              <p>{formatDate(event.startTime, "PPPP")}</p>
+            </span>
+          ) : (
+            "Google Meet"
+          )}
+        </span>
       </div>
       <p className="text-gray-700">{event.description}</p>
+      {/* <p className="text-1xl font-semibold mr-2 mt-4">Former Time</p>
+      <div className="flex items-center mb-4">
+        <Calendar className="mr-2" />
+        <span className="line-through">
+          {format(event.startTime, "HH:mma - ") +
+            format(event.endTime, "HH:mma")}
+          <p>{formatDate(event.startTime, "PPPP")}</p>
+        </span>
+      </div> */}
     </div>
   );
 };

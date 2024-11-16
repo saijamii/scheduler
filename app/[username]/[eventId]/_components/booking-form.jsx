@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/useFetch";
 import { createBooking } from "@/actions/booking";
 
-const BookingForm = ({ userAvailability, event , reschedule}) => {
+const BookingForm = ({ userAvailability, event, reschedule }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const { loading, data, fn: fnCreateBooking } = useFetch(createBooking);
@@ -62,6 +62,10 @@ const BookingForm = ({ userAvailability, event , reschedule}) => {
     await fnCreateBooking(bookingData);
   };
 
+  const handleUpdateBooking = async () => {
+    console.log("first");
+  };
+
   const availableDays = userAvailability.map((day) => new Date(day.date));
   const timeSlots = selectedDate
     ? userAvailability.find(
@@ -94,6 +98,7 @@ const BookingForm = ({ userAvailability, event , reschedule}) => {
     <div className="flex flex-col gap-8 p-10 border bg-white">
       <div className="md:h-96 flex flex-col md:flex-row gap-5 ">
         <div className="w-full">
+          {reschedule && <p className="text-blue-600">Reschedule Event</p>}
           <DayPicker
             mode="single"
             selected={selectedDate}
@@ -134,35 +139,45 @@ const BookingForm = ({ userAvailability, event , reschedule}) => {
           </div>
         </div>
       </div>
-      {selectedTime && (
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Input {...register("name")} placeholder="Your Name" />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )}
-          </div>
-          <div>
-            <Input
-              {...register("email")}
-              type="email"
-              placeholder="Your Email"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-          <div>
-            <Textarea
-              {...register("additionalInfo")}
-              placeholder="Additional Information"
-            />
-          </div>
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Scheduling..." : "Schedule Event"}
+      {selectedTime &&
+        (reschedule ? (
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-4"
+            onClick={handleUpdateBooking}
+          >
+            {loading ? "Updating..." : "Reschedule Event"}
           </Button>
-        </form>
-      )}
+        ) : (
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <Input {...register("name")} placeholder="Your Name" />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                {...register("email")}
+                type="email"
+                placeholder="Your Email"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+            <div>
+              <Textarea
+                {...register("additionalInfo")}
+                placeholder="Additional Information"
+              />
+            </div>
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? "Scheduling..." : "Schedule Event"}
+            </Button>
+          </form>
+        ))}
     </div>
   );
 };
